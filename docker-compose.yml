@@ -1,0 +1,20 @@
+version: "3"
+services:
+  react: ##컨테이너이름
+    build: ##도커파일과 필요한 파일들
+      context: . ##도커 이미지를 구성하기 위한 도커파일과 폴더들이 있는 위치
+      dockerfile: Dockerfile.dev ##도커 파일 어떤 것인지 지정 -f 옵션과 같음
+    ports:
+      - "3000:3000"
+    volumes:
+      - /usr/src/app/node_modules ##특정 파일 매핑 제외
+      - ./:/usr/src/app ##현재 디렉토리를 워킹 디렉토리에 매핑(참조)
+    stdin_open: true ## 리액트에서 이 옵션을 주지 않으면 종료시 오류가 남
+  tests:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - /usr/src/app/node_modules
+      - ./:/usr/src/app
+    command: ["npm", "run", "test"]
